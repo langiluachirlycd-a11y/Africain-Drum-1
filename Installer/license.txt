@@ -1,0 +1,16 @@
+African Drum - Contrato de Licenca de Utilizador Final
+African Gospel
+
+1. O que e. O African Drum e um sampler de bateria (VST3 / AU / Standalone) com biblioteca MIDI de grooves e efeitos.
+   O software NAO inclui samples de bateria: o utilizador carrega os seus proprios samples e kits.
+2. Licenca. E-te concedido o direito de instalar e usar este software nos teus computadores para criar e gravar
+   musica, incluindo uso comercial das gravacoes que produzires com ele.
+3. Restricoes. Nao e permitido revender, redistribuir, alugar ou partilhar o instalador ou o software,
+   nem distribuir isoladamente os grooves MIDI incluidos como produto de biblioteca.
+4. Samples do utilizador. Os samples que carregares continuam a ser da tua responsabilidade; usa apenas
+   samples que tens direito de usar.
+5. Garantia. O software e fornecido "como esta", sem garantia de qualquer tipo. Em nenhum caso os autores
+   respondem por danos resultantes do uso do software. Faz copias de seguranca dos teus projetos.
+6. Componentes de terceiros. Este software usa o framework JUCE (https://juce.com) sob a sua licenca.
+
+Ao instalar, aceitas estes termos.

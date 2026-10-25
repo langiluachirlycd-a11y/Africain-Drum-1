@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="2">
+  <title>African Drum @VERSION@</title>
+  <organization>com.dblproduction</organization>
+  <welcome file="welcome.html"/>
+  <license file="license.txt"/>
+  <conclusion file="conclusion.html"/>
+  <options customize="allow" require-scripts="false" hostArchitectures="arm64,x86_64"/>
+  <domains enable_anywhere="false" enable_localSystem="true"/>
+  <choices-outline>
+    <line choice="vst3"/><line choice="au"/><line choice="app"/>
+  </choices-outline>
+  <choice id="vst3" title="VST3" description="Plugin VST3 (Cubase, Reaper, Ableton Live, Studio One, FL Studio, Bitwig...)"><pkg-ref id="com.dblproduction.drums.vst3"/></choice>
+  <choice id="au" title="Audio Unit" description="Audio Unit (Logic Pro, GarageBand, MainStage)"><pkg-ref id="com.dblproduction.drums.au"/></choice>
+  <choice id="app" title="Standalone" description="Aplicação independente em /Applications" start_selected="true"><pkg-ref id="com.dblproduction.drums.app"/></choice>
+  <pkg-ref id="com.dblproduction.drums.vst3" version="@VERSION@">vst3.pkg</pkg-ref>
+  <pkg-ref id="com.dblproduction.drums.au" version="@VERSION@">au.pkg</pkg-ref>
+  <pkg-ref id="com.dblproduction.drums.app" version="@VERSION@">app.pkg</pkg-ref>
+</installer-gui-script>

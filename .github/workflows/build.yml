@@ -1,0 +1,83 @@
+name: Build DrumForge
+
+on:
+  push:
+    tags: ['v*']
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            name: macOS
+          - os: windows-latest
+            name: Windows
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.name }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      # pluginval is the industry validator used to check that a plugin behaves in every host
+      - name: Validate VST3 (macOS)
+        if: matrix.name == 'macOS'
+        continue-on-error: true
+        run: |
+          curl -L -o pluginval.zip https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_macOS.zip
+          unzip -q pluginval.zip
+          ./pluginval.app/Contents/MacOS/pluginval --strictness-level 5 --validate-in-process \
+            "build/DrumForge_artefacts/Release/VST3/African Drum.vst3"
+
+      - name: Validate VST3 (Windows)
+        if: matrix.name == 'Windows'
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          Invoke-WebRequest https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_Windows.zip -OutFile pluginval.zip
+          Expand-Archive pluginval.zip -DestinationPath pluginval
+          ./pluginval/pluginval.exe --strictness-level 5 --validate-in-process "build/DrumForge_artefacts/Release/VST3/African Drum.vst3"
+
+      - name: Upload plugin
+        uses: actions/upload-artifact@v4
+        with:
+          name: African-Drum-${{ matrix.name }}
+          path: build/DrumForge_artefacts/Release/
+
+      - name: Installer (macOS)
+        if: matrix.name == 'macOS'
+        run: |
+          chmod +x Installer/macos/build_pkg.sh
+          Installer/macos/build_pkg.sh 1.0.0
+
+      - name: Installer (Windows)
+        if: matrix.name == 'Windows'
+        shell: pwsh
+        run: |
+          choco install innosetup -y --no-progress
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" Installer\windows\African-Drum.iss /DAppVersion=1.0.0 "/DBuildDir=$PWD\build\DrumForge_artefacts\Release" "/DOutDir=$PWD\Installer\output"
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: African-Drum-${{ matrix.name }}-Installer
+          path: Installer/output/*
+
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: Installer/output/*
